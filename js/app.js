@@ -5,7 +5,11 @@ var Enemy = function() {
 
     // The image/sprite for our enemies, this uses
     // a helper we've provided to easily load images
+    this.x = 0;
+    this.y = Math.floor(Math.random() * (4 - 1)) * 100 + 40;
     this.sprite = 'images/enemy-bug.png';
+
+
 };
 
 // Update the enemy's position, required method for game
@@ -14,37 +18,62 @@ Enemy.prototype.update = function(dt) {
     // You should multiply any movement by the dt parameter
     // which will ensure the game runs at the same speed for
     // all computers.
+    if (this.x < 550) {
+        this.x = this.x + Math.random() * 3;
+    } else {
+        this.x = 0;
+    };
 };
 
 // Draw the enemy on the screen, required method for game
 Enemy.prototype.render = function() {
+
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+
 };
 
 // Now write your own player class
 // This class requires an update(), render() and
 // a handleInput() method.
 
-var Player = function(){
-
+var Player = function() {
+    this.x = 200;
+    this.y = 400;
     this.sprite = 'images/char-boy.png';
 };
 
-Player.prototype.update = function(dt){
+Player.prototype.update = function(dt) {
+    if (dt === "left") {
+        this.x = this.x - 100;
+    } else if (dt === "right") {
+        this.x = this.x + 100;
+
+    } else if (dt === "up") {
+
+        this.y = this.y - 100;
+
+    } else if (dt === "down") {
+
+        this.y = this.y + 100;
+    }
 
 };
-Player.prototype.render = function(){
+Player.prototype.render = function() {
 
+    ctx.save();
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+    console.log(this.y);
+    ctx.restore();
+};
+
+Player.prototype.handleInput = function(keycode) {
+    this.update(keycode);
+    // console.log(keycode);
 
 };
 
-Player.prototype.handleInput = function(){
 
-};
-
-
-var allEnemies =[new Enemy(),new Enemy()];
+var allEnemies = [new Enemy(), new Enemy(), new Enemy()];
 
 var player = new Player();
 
@@ -65,4 +94,5 @@ document.addEventListener('keyup', function(e) {
     };
 
     player.handleInput(allowedKeys[e.keyCode]);
+    // console.log(e.keyCode);
 });
