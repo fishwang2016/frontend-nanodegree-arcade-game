@@ -5,12 +5,12 @@ var Enemy = function() {
 
     // The image/sprite for our enemies, this uses
     // a helper we've provided to easily load images
-    this.x = -2;
-    this.y = Math.floor(Math.random() * (4 - 1)) * 83+60;
+    this.x = -100;
+    this.y = Math.floor(Math.random() * (4 - 1)) * 83 + 60;
     this.sprite = 'images/enemy-bug.png';
-    this.speed =  Math.random()+0.1;
-    this.center_x= this.x+101/2.0;
-    this.center_y = (this.y+171-83/2.0);
+    this.speed = Math.random() + 0.1;
+    this.center_x = this.x + 101 / 2.0;
+    this.center_y = (this.y + 171 - 83 / 2.0);
 
 
 };
@@ -22,21 +22,21 @@ Enemy.prototype.update = function(dt) {
     // which will ensure the game runs at the same speed for
     // all computers.
     if (this.x < 550) {
-        this.x = this.x + this.speed*2; //how to imput dt?
-    } else {
-        this.x = 0;
+        this.x = this.x + this.speed * 2; //how to imput dt?
+    } else {// resent enemy
+        this.x = -100;
+        this.y = Math.floor(Math.random() * (4 - 1)) * 83 + 60;
     }
 
-    this.center_x = this.x+101/2.0;
-    this.center_y = this.y+171-83/2.0;
+    this.center_x = this.x + 101 / 2.0;
+    this.center_y = this.y + 171 - 83 / 2.0;
     // console.log(player.center_y);
 
-     var x_distance = Math.abs(this.center_x - player.center_x) <=90;
-     var y_distance = Math.abs(this.center_y - player.center_y) < 41.5;
-    if (x_distance && y_distance){
-            player.x = 200;
-            player.y = 400;
-            console.log("New Game");
+    var x_distance = Math.abs(this.center_x - player.center_x) <= 90;
+    var y_distance = Math.abs(this.center_y - player.center_y) < 41.5;
+    if (x_distance && y_distance) {
+        player.x = 200;
+        player.y = 400;
     }
 
 };
@@ -44,10 +44,7 @@ Enemy.prototype.update = function(dt) {
 // Draw the enemy on the screen, required method for game
 Enemy.prototype.render = function() {
 
-
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
-
-
 
 };
 
@@ -58,34 +55,40 @@ Enemy.prototype.render = function() {
 var Player = function() {
     this.x = 200;
     this.y = 400;
-    this.center_x= this.x+101/2.0;
-    this.center_y = (this.y+171-83/2.0);
+    this.center_x = this.x + 101 / 2.0;
+    this.center_y = (this.y + 171 - 83 / 2.0);
     this.sprite = 'images/char-boy.png';
 };
 
-Player.prototype.update = function(dt) {
+Player.prototype.update = function(keycode) {
 
-            if (dt === "left" && this.x > -2) {
-                this.x = this.x - 101;
-            } else if (dt === "right" && this.x <402) {
-                this.x = this.x + 101;
+    if (keycode === "left" && this.x > -2) {
+        this.x = this.x - 101;
+    } else if (keycode === "right" && this.x < 402) {
+        this.x = this.x + 101;
+    } else if (keycode === "up" && this.y > -15) {
+        this.y = this.y - 83;
+        if (this.y<0){
+            console.log("You made it !");
+            this.x = 200;
+            this.y = 400;
+        }
+    } else if (keycode === "down" && this.y < 400) {
+        this.y = this.y + 83;
+    }
 
-            } else if (dt === "up" && this.y >-15) {
 
-                this.y = this.y - 83;
 
-            } else if (dt === "down" && this.y < 400) {
-
-                this.y = this.y + 83;
-            }
+    console.log(this.y);
 
 };
 
 Player.prototype.render = function() {
 
-    this.center_x= this.x+101/2.0;
-    this.center_y = (this.y+171-83/2.0);
+    this.center_x = this.x + 101 / 2.0;
+    this.center_y = (this.y + 171 - 83 / 2.0);
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+    ctx.strokeText("Helo",0,100);
 
 
 };
@@ -97,14 +100,17 @@ Player.prototype.handleInput = function(keycode) {
 };
 
 
-var allEnemies = [new Enemy(), new Enemy(), new Enemy()];
-
+var enemy1 = new Enemy();
+var enemy2 = new Enemy();
+var enemy3 = new Enemy();
+var enemy4 = new Enemy();
+var enemy5 = new Enemy();
+var allEnemies = [enemy1, enemy2, enemy3,enemy4,enemy5];
 var player = new Player();
 
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
-
 
 
 // This listens for key presses and sends the keys to your
