@@ -8,7 +8,7 @@ var Enemy = function() {
     this.x = -100;
     this.y = Math.floor(Math.random() * (4 - 1)) * 83 + 60;
     this.sprite = 'images/enemy-bug.png';
-    this.speed = Math.random() + 0.1;
+    this.speed = Math.random() * 2 + 1;
     this.center_x = this.x + 101 / 2.0;
     this.center_y = (this.y + 171 - 83 / 2.0);
 
@@ -21,11 +21,13 @@ Enemy.prototype.update = function(dt) {
     // You should multiply any movement by the dt parameter
     // which will ensure the game runs at the same speed for
     // all computers.
+
     if (this.x < 550) {
-        this.x = this.x + this.speed * 2; //how to imput dt?
-    } else {// resent enemy
+        this.x = this.x + this.speed * (dt + 1); //how to imput dt?
+    } else { // resent enemy
         this.x = -100;
         this.y = Math.floor(Math.random() * (4 - 1)) * 83 + 60;
+        this.speed = Math.random() * 3 + 1;
     }
 
     this.center_x = this.x + 101 / 2.0;
@@ -37,6 +39,7 @@ Enemy.prototype.update = function(dt) {
     if (x_distance && y_distance) {
         player.x = 200;
         player.y = 400;
+        lives = lives - 1;
     }
 
 };
@@ -68,18 +71,19 @@ Player.prototype.update = function(keycode) {
         this.x = this.x + 101;
     } else if (keycode === "up" && this.y > -15) {
         this.y = this.y - 83;
-        if (this.y<0){
-            console.log("You made it !");
+        if (this.y < 0) {
+            ctx.strokeText("Good Job!", 210, 100);
             this.x = 200;
             this.y = 400;
+            score = score + 100;
+            if ((score % 500) === 0) {
+                lives = lives + 1;
+                levels = levels + 1;
+            }
         }
     } else if (keycode === "down" && this.y < 400) {
         this.y = this.y + 83;
     }
-
-
-
-    console.log(this.y);
 
 };
 
@@ -88,7 +92,10 @@ Player.prototype.render = function() {
     this.center_x = this.x + 101 / 2.0;
     this.center_y = (this.y + 171 - 83 / 2.0);
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
-    ctx.strokeText("Helo",0,100);
+    ctx.strokeStyle = "#FFEB3B";
+    ctx.strokeText("SCORE: " + score, 10, 80);
+    ctx.strokeText("LIVES: " + lives, 420, 80);
+    ctx.strokeText("LEVELS: " + levels, 220, 80);
 
 
 };
@@ -98,14 +105,16 @@ Player.prototype.handleInput = function(keycode) {
     // console.log(keycode);
 
 };
-
+var score = 0;
+var lives = 10;
+var levels = 1;
 
 var enemy1 = new Enemy();
 var enemy2 = new Enemy();
 var enemy3 = new Enemy();
 var enemy4 = new Enemy();
 var enemy5 = new Enemy();
-var allEnemies = [enemy1, enemy2, enemy3,enemy4,enemy5];
+var allEnemies = [enemy1, enemy2, enemy3, enemy4, enemy5];
 var player = new Player();
 
 // Now instantiate your objects.
