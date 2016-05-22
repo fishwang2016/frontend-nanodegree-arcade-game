@@ -5,9 +5,12 @@ var Enemy = function() {
 
     // The image/sprite for our enemies, this uses
     // a helper we've provided to easily load images
-    this.x = 0;
-    this.y = Math.floor(Math.random() * (4 - 1)) * 100 + 40;
+    this.x = -2;
+    this.y = Math.floor(Math.random() * (4 - 1)) * 83+60;
     this.sprite = 'images/enemy-bug.png';
+    this.speed =  Math.random()+0.1;
+    this.center_x= this.x+101/2.0;
+    this.center_y = (this.y+171-83/2.0);
 
 
 };
@@ -19,16 +22,32 @@ Enemy.prototype.update = function(dt) {
     // which will ensure the game runs at the same speed for
     // all computers.
     if (this.x < 550) {
-        this.x = this.x + Math.random() * 3;
+        this.x = this.x + this.speed*2; //how to imput dt?
     } else {
         this.x = 0;
-    };
+    }
+
+    this.center_x = this.x+101/2.0;
+    this.center_y = this.y+171-83/2.0;
+    // console.log(player.center_y);
+
+     var x_distance = Math.abs(this.center_x - player.center_x) <=90;
+     var y_distance = Math.abs(this.center_y - player.center_y) < 41.5;
+    if (x_distance && y_distance){
+            player.x = 200;
+            player.y = 400;
+            console.log("New Game");
+    }
+
 };
 
 // Draw the enemy on the screen, required method for game
 Enemy.prototype.render = function() {
 
+
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+
+
 
 };
 
@@ -39,31 +58,36 @@ Enemy.prototype.render = function() {
 var Player = function() {
     this.x = 200;
     this.y = 400;
+    this.center_x= this.x+101/2.0;
+    this.center_y = (this.y+171-83/2.0);
     this.sprite = 'images/char-boy.png';
 };
 
 Player.prototype.update = function(dt) {
-    if (dt === "left") {
-        this.x = this.x - 100;
-    } else if (dt === "right") {
-        this.x = this.x + 100;
 
-    } else if (dt === "up") {
+            if (dt === "left" && this.x > -2) {
+                this.x = this.x - 101;
+            } else if (dt === "right" && this.x <402) {
+                this.x = this.x + 101;
 
-        this.y = this.y - 100;
+            } else if (dt === "up" && this.y >-15) {
 
-    } else if (dt === "down") {
+                this.y = this.y - 83;
 
-        this.y = this.y + 100;
-    }
+            } else if (dt === "down" && this.y < 400) {
+
+                this.y = this.y + 83;
+            }
 
 };
+
 Player.prototype.render = function() {
 
-    ctx.save();
+    this.center_x= this.x+101/2.0;
+    this.center_y = (this.y+171-83/2.0);
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
-    console.log(this.y);
-    ctx.restore();
+
+
 };
 
 Player.prototype.handleInput = function(keycode) {
