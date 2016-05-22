@@ -1,6 +1,6 @@
 # Frogger
 
-This is a project on Udacity Nano degree. You can try a little fun of it.
+This is a project from  Udacity Nano degree. You can try a little fun of it.
 
 # Quickstart
 
